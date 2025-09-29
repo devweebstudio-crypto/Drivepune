@@ -10,123 +10,516 @@
 
 <style>
 /* ----------------- Reset & Base ----------------- */
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
-body{background:#f6f8fb;color:#102a43;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-.wrap{max-width:1200px;margin:0 auto;padding:16px}
-
-/* ----------------- Fixed Brand Header ----------------- */
-.brand-header{
-  position:fixed;top:0;left:0;right:0;z-index:130;
-  background:linear-gradient(90deg,#0b66ff,#06a6ff);
-  color:#fff;padding:12px 0;box-shadow:0 10px 30px rgba(2,6,23,0.12);
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #3b82f6;
+  --text-dark: #1e293b;
+  --text-medium: #475569;
+  --text-light: #64748b;
+  --bg-light: #f8fafc;
+  --bg-white: #ffffff;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
 }
-.brand-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:6px 16px}
-.brand-logo{width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
-.brand-text{display:flex;flex-direction:column}
-.brand-title{font-weight:800;font-size:18px;letter-spacing:0.2px}
-.brand-sub{font-size:13px;opacity:0.95;margin-top:3px}
 
-/* ----------------- Fixed Search Panel (below brand) ----------------- */
-:root{--brand-height:84px;--search-height:76px}
-.search-fixed-wrap{
-  position:fixed;top:var(--brand-height);left:0;right:0;z-index:125;
-  display:flex;justify-content:center;padding:10px 12px;background:linear-gradient(180deg,rgba(255,255,255,.98), rgba(255,255,255,.95));border-bottom:1px solid #eef4ff;
-  box-shadow:0 6px 18px rgba(2,6,23,0.04);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
-.search-panel{width:100%;max-width:980px;background:#fff;padding:10px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(2,6,23,0.05)}
-.input-group{position:relative;flex:1;min-width:210px}
-.input-group .icon{position:absolute;left:12px;color:#6b7280;font-size:16px;pointer-events:none}
-.input-group input{width:100%;padding:12px 14px 12px 40px;border-radius:10px;border:1px solid #e6eef8;font-size:14px}
-.search-controls{display:flex;gap:10px;align-items:center}
-.search-controls select{padding:10px;border-radius:10px;border:1px solid #e6eef8;min-width:130px}
-.search-btn{background:linear-gradient(90deg,#0b66ff,#06a6ff);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800;display:flex;align-items:center;gap:8px}
 
-/* ensure page content is visible below fixed bars */
-.page-spacer{height:calc(var(--brand-height) + var(--search-height) + 18px);}
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
 
-/* ----------------- Hero (kept minimal for cleanliness) ----------------- */
-.hero{max-width:1200px;margin:18px auto 8px;padding:14px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#f7fbff);box-shadow:0 10px 30px rgba(2,6,23,0.04);display:flex;align-items:center;gap:14px}
-.hero h1{font-size:20px}
-.hero p{color:#475569;font-size:14px}
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-/* ----------------- Cars Grid & Cards ----------------- */
-.cars-section{max-width:1200px;margin:10px auto 80px;padding:0 16px}
-.section-title{font-size:22px;font-weight:800;text-align:left;margin:4px 0 12px;color:#102a43}
-.cars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ----------------- Minimal Header ----------------- */
+.brand-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 130;
+  background: var(--bg-white);
+  color: var(--text-dark);
+  padding: 16px 0;
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.brand-title {
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 0.2px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.search-icon {
+  background: var(--primary);
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.search-icon:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ----------------- Search Panel ----------------- */
+.search-panel {
+  position: fixed;
+  top: 76px;
+  left: 0;
+  right: 0;
+  z-index: 125;
+  background: var(--bg-white);
+  padding: 20px 16px;
+  box-shadow: var(--shadow);
+  border-bottom: 1px solid var(--border);
+  display: none;
+}
+
+.search-panel.active {
+  display: block;
+}
+
+.search-form {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.input-group {
+  position: relative;
+  flex: 1;
+}
+
+.input-group .icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px 14px 44px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 15px;
+  transition: all 0.2s ease;
+  background: var(--bg-light);
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.search-controls select {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  min-width: 140px;
+  font-size: 14px;
+  background: var(--bg-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.search-controls select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+.search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ensure page content is visible below fixed header */
+.page-spacer {
+  height: 76px;
+}
+
+/* ----------------- Cars Grid ----------------- */
+.cars-section {
+  max-width: 1200px;
+  margin: 0 auto 60px;
+  padding: 0 16px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  text-align: left;
+  margin: 24px 0;
+  color: var(--text-dark);
+}
+
+.cars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
 /* card */
-.car-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.06);display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
-.car-card:hover{transform:translateY(-6px);box-shadow:0 20px 45px rgba(2,6,23,0.10)}
+.car-card {
+  background: var(--bg-white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+}
 
-.car-media{position:relative;width:100%;overflow:hidden;background:#f2f6fb}
-.car-media::after{content:"";display:block;padding-bottom:62%} /* image aspect ratio */
-.car-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
 
-.car-details{padding:14px;display:flex;flex-direction:column;gap:10px}
-.car-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.car-title{font-size:18px;font-weight:800;color:#0b2540}
-.car-price{font-size:18px;color:#e94545;font-weight:900}
+.car-media {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f2f6fb;
+}
 
-.car-info{display:flex;gap:8px;flex-wrap:wrap;color:#475569;font-weight:600;font-size:13px}
-.car-features{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-.feature-tag{padding:6px 10px;border-radius:999px;background:#f1f5f9;font-weight:700;color:#102a43;font-size:13px;box-shadow:0 6px 14px rgba(2,6,23,0.03)}
+.car-media::after {
+  content: "";
+  display: block;
+  padding-bottom: 62%;
+}
+
+.car-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.car-card:hover .car-image {
+  transform: scale(1.05);
+}
+
+.car-details {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.car-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.car-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.3;
+}
+
+.car-price {
+  font-size: 20px;
+  color: var(--primary);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.car-price small {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+}
+
+.car-info {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: var(--text-medium);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.car-info span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.car-features {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.feature-tag {
+  padding: 6px 12px;
+  border-radius: 50px;
+  background: var(--bg-light);
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 13px;
+  border: 1px solid var(--border);
+}
 
 /* badges for cleanliness / standard */
-.badges{display:flex;gap:8px;margin-top:4px}
-.badge{font-size:12px;padding:6px 8px;border-radius:8px;background:#ecf9f3;color:#065f46;font-weight:800;border:1px solid #d1fae5}
-.badge.standard{background:linear-gradient(90deg,#fff7ed,#fff1e6);color:#7a3e00;border:1px solid #ffedd5}
+.badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #ecf9f3;
+  color: #065f46;
+  font-weight: 800;
+  border: 1px solid #d1fae5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge.standard {
+  background: linear-gradient(90deg, #fff7ed, #fff1e6);
+  color: #7a3e00;
+  border: 1px solid #ffedd5;
+}
 
 /* action area */
-.action-row{display:flex;gap:10px;margin-top:10px}
-.btn{flex:1;border:0;border-radius:10px;padding:12px;font-weight:800;display:inline-flex;align-items:center;gap:10px;justify-content:center;cursor:pointer}
-.btn i{font-size:16px}
-.btn-whatsapp{background:linear-gradient(90deg,#25D366,#128C7E);color:#fff}
-.btn-call{background:linear-gradient(90deg,#3b82f6,#2563eb);color:#fff}
-.btn-details{background:linear-gradient(90deg,#f59e0b,#e67e22);color:#fff;width:100%;margin-top:10px;padding:12px;border-radius:10px}
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn {
+  flex: 1;
+  border: 0;
+  border-radius: var(--radius);
+  padding: 12px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.btn i {
+  font-size: 16px;
+}
+
+.btn-whatsapp {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.btn-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-call {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.btn-call:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-details {
+  background: linear-gradient(135deg, #f59e0b, #e67e22);
+  color: white;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-details:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
 
 /* loading */
-.loading{grid-column:1/-1;text-align:center;padding:36px;color:#64748b;font-weight:700}
+.loading {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: 18px;
+}
 
-/* footer */
-footer{max-width:1200px;margin:40px auto;padding:26px;text-align:center;color:#475569;font-size:14px}
+/* ----------------- Responsive Design ----------------- */
+@media (max-width: 1024px) {
+  .cars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-/* responsive */
-@media (max-width:1024px){ .cars-grid{grid-template-columns:repeat(2,1fr)} }
-@media (max-width:640px){
-  :root{--brand-height:108px;--search-height:112px}
-  .brand-inner{padding:10px}
-  .brand-title{font-size:16px}
-  .search-panel{flex-direction:column;align-items:stretch;padding:10px}
-  .search-controls{display:flex;flex-wrap:wrap}
-  .cars-grid{grid-template-columns:1fr;gap:12px}
-  .car-title{font-size:16px}
-  .car-price{font-size:16px}
-  .badge{font-size:11px;padding:6px 8px}
+@media (max-width: 768px) {
+  .brand-title {
+    font-size: 20px;
+  }
+  
+  .search-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-controls {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .search-controls select {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cars-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .car-title {
+    font-size: 17px;
+  }
+  
+  .car-price {
+    font-size: 18px;
+  }
+  
+  .badge {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .action-row {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- BRAND HEADER (fixed) -->
+<!-- MINIMAL HEADER -->
 <div class="brand-header" role="banner" aria-label="DrivePune header">
   <div class="brand-inner">
-    <div class="brand-logo">DP</div>
-    <div class="brand-text">
-      <div class="brand-title">DrivePune</div>
-      <div class="brand-sub">Sanitized • Standard-Checked • Safe Rides — +91 95118 64107</div>
-    </div>
-
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-      <a href="tel:+919511864107" style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;color:#fff;font-weight:700">Call: +91 95118 64107</a>
-      <a href="https://wa.me/919511864107" target="_blank" style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;color:#fff;font-weight:700">WhatsApp</a>
+    <div class="brand-title">DrivePune</div>
+    <div class="search-icon" id="searchToggle">
+      <i class="fas fa-search"></i>
     </div>
   </div>
 </div>
 
-<!-- SEARCH PANEL (fixed just below brand) -->
-<div class="search-fixed-wrap" role="search" aria-label="Search cars">
-  <div class="search-panel">
+<!-- SEARCH PANEL (hidden by default) -->
+<div class="search-panel" id="searchPanel" role="search" aria-label="Search cars">
+  <div class="search-form">
     <div class="input-group">
       <span class="icon"><i class="fas fa-search"></i></span>
       <input id="searchInput" placeholder="Search cars, model or feature (e.g., Swift, Innova, diesel)" />
@@ -154,33 +547,20 @@ footer{max-width:1200px;margin:40px auto;padding:26px;text-align:center;color:#4
   </div>
 </div>
 
-<!-- spacer so content not hidden underneath fixed header+search -->
+<!-- spacer so content not hidden underneath fixed header -->
 <div class="page-spacer" aria-hidden="true"></div>
-
-<!-- HERO (simple banner like 'start vehicle' cleanliness statement) -->
-<div class="hero wrap" role="region" aria-label="DrivePune features">
-  <div>
-    <h1 style="margin:0 0 6px 0">Sanitized Vehicles • Standard Inspection</h1>
-    <p style="margin:0;color:#475569">All cars are cleaned & disinfected before every ride. Standard checks done to ensure safe travel.</p>
-  </div>
-</div>
 
 <!-- CARS GRID -->
 <section class="cars-section">
   <div class="wrap">
-    <div class="section-title">Available Cars — Clean & Standard</div>
+    <div class="section-title">Available Cars</div>
     <div id="carsContainer" class="cars-grid">
       <div class="loading">Loading cars…</div>
     </div>
   </div>
 </section>
 
-<!-- Footer -->
-<footer>
-  © <strong>DrivePune</strong> — Sanitized & Standard-Checked Cars • Near Shell Petrol Pump Bhukum, Pune • <a href="tel:+919511864107">+91 95118 64107</a>
-</footer>
-
-<!-- Firebase + App JS (keeps same functionality as earlier) -->
+<!-- Firebase + App JS -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script>
@@ -188,7 +568,7 @@ footer{max-width:1200px;margin:40px auto;padding:26px;text-align:center;color:#4
 const WHATSAPP_PHONE = '919511864107';
 const CALL_PHONE = '+919511864107';
 
-/* Firebase config: replace with your own if needed */
+/* Firebase config */
 const firebaseConfig = {
   apiKey: "AIzaSyCqDu2iOLaqZP-pxr4gxuuKuwwhzsd5E4s",
   authDomain: "car-rental-website-43a4f.firebaseapp.com",
@@ -207,6 +587,23 @@ const searchInput = document.getElementById('searchInput');
 const fuelTypeFilter = document.getElementById('fuelTypeFilter');
 const carTypeFilter = document.getElementById('carTypeFilter');
 const searchButton = document.getElementById('searchButton');
+const searchToggle = document.getElementById('searchToggle');
+const searchPanel = document.getElementById('searchPanel');
+
+/* ----------------- Search Panel Toggle ----------------- */
+searchToggle.addEventListener('click', () => {
+  searchPanel.classList.toggle('active');
+  if (searchPanel.classList.contains('active')) {
+    searchInput.focus();
+  }
+});
+
+// Close search panel when clicking outside
+document.addEventListener('click', (e) => {
+  if (!searchToggle.contains(e.target) && !searchPanel.contains(e.target)) {
+    searchPanel.classList.remove('active');
+  }
+});
 
 /* ----------------- Helpers ----------------- */
 function escapeForJS(s){ return (''+s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
@@ -240,8 +637,8 @@ function createCarCard(car){
       </div>
 
       <div class="badges">
-        <div class="badge">Sanitized</div>
-        <div class="badge standard">Standard</div>
+        <div class="badge"><i class="fas fa-shield-alt"></i> Sanitized</div>
+        <div class="badge standard"><i class="fas fa-check-circle"></i> Standard</div>
       </div>
 
       <div class="car-features">
@@ -258,8 +655,10 @@ function createCarCard(car){
           <i class="fas fa-phone"></i> Call
         </button>
       </div>
-
-      <a href="details.html?id=${encodeURIComponent(id)}"><button class="btn btn-details"><i class="fas fa-info-circle"></i> View Details</button></a>
+      
+      <a href="details.html?id=${encodeURIComponent(id)}" class="btn-details">
+        <i class="fas fa-info-circle"></i> View Details
+      </a>
     </div>
   `;
   return el;
@@ -293,15 +692,12 @@ function loadCars(filters = {}) {
 function performSearch(){
   const filters = { searchTerm: searchInput.value||'', fuelType: fuelTypeFilter.value||'', carType: carTypeFilter.value||'' };
   loadCars(filters);
-  // scroll to below fixed header/search
-  const offset = document.querySelector('.page-spacer')?.offsetTop || 0;
-  window.scrollTo({top: offset + 8, behavior:'smooth'});
+  searchPanel.classList.remove('active');
 }
 
 /* ----------------- Contact actions ----------------- */
 function contactViaWhatsApp(carName, fuelType, transmission, seats, rate){
-  const from = document.getElementById('searchInput').value || 'Pune';
-  const message = `Hi DrivePune, I'm interested in *${carName}* (${fuelType}, ${transmission}, ${seats} seats) at ₹${rate}/day. Pickup: ${from}. Please share availability.`;
+  const message = `Hi DrivePune, I'm interested in *${carName}* (${fuelType}, ${transmission}, ${seats} seats) at ₹${rate}/day. Please share availability.`;
   window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`,'_blank');
 }
 function callNow(phone){ window.location.href = 'tel:' + phone; }
@@ -311,7 +707,7 @@ window.contactViaWhatsApp = contactViaWhatsApp;
 window.callNow = callNow;
 window.escapeForJS = escapeForJS;
 
-/* ----------------- Auto refresh (simple) ----------------- */
+/* ----------------- Auto refresh ----------------- */
 function smartRefresh(){
   if (!currentFilters) return;
   let q = carsCollection.limit(200);
