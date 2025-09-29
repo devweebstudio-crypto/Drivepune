@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DrivePune — Clean & Standard Car Rentals</title>
+<meta name="description" content="DrivePune — Rent cars in Pune. Sanitized cars, standard checks, instant WhatsApp booking."/>
+<link rel="icon" href="https://i.ibb.co/LX093jkB/logo.png" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ----------------- Reset & Base ----------------- */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
+body{background:#f6f8fb;color:#102a43;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1200px;margin:0 auto;padding:16px}
+
+/* ----------------- Fixed Brand Header ----------------- */
+.brand-header{
+  position:fixed;top:0;left:0;right:0;z-index:130;
+  background:linear-gradient(90deg,#0b66ff,#06a6ff);
+  color:#fff;padding:12px 0;box-shadow:0 10px 30px rgba(2,6,23,0.12);
+}
+.brand-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:6px 16px}
+.brand-logo{width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff}
+.brand-text{display:flex;flex-direction:column}
+.brand-title{font-weight:800;font-size:18px;letter-spacing:0.2px}
+.brand-sub{font-size:13px;opacity:0.95;margin-top:3px}
+
+/* ----------------- Fixed Search Panel (below brand) ----------------- */
+:root{--brand-height:84px;--search-height:76px}
+.search-fixed-wrap{
+  position:fixed;top:var(--brand-height);left:0;right:0;z-index:125;
+  display:flex;justify-content:center;padding:10px 12px;background:linear-gradient(180deg,rgba(255,255,255,.98), rgba(255,255,255,.95));border-bottom:1px solid #eef4ff;
+  box-shadow:0 6px 18px rgba(2,6,23,0.04);
+}
+.search-panel{width:100%;max-width:980px;background:#fff;padding:10px;border-radius:12px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(2,6,23,0.05)}
+.input-group{position:relative;flex:1;min-width:210px}
+.input-group .icon{position:absolute;left:12px;color:#6b7280;font-size:16px;pointer-events:none}
+.input-group input{width:100%;padding:12px 14px 12px 40px;border-radius:10px;border:1px solid #e6eef8;font-size:14px}
+.search-controls{display:flex;gap:10px;align-items:center}
+.search-controls select{padding:10px;border-radius:10px;border:1px solid #e6eef8;min-width:130px}
+.search-btn{background:linear-gradient(90deg,#0b66ff,#06a6ff);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:800;display:flex;align-items:center;gap:8px}
+
+/* ensure page content is visible below fixed bars */
+.page-spacer{height:calc(var(--brand-height) + var(--search-height) + 18px);}
+
+/* ----------------- Hero (kept minimal for cleanliness) ----------------- */
+.hero{max-width:1200px;margin:18px auto 8px;padding:14px;border-radius:12px;background:linear-gradient(180deg,#ffffff,#f7fbff);box-shadow:0 10px 30px rgba(2,6,23,0.04);display:flex;align-items:center;gap:14px}
+.hero h1{font-size:20px}
+.hero p{color:#475569;font-size:14px}
+
+/* ----------------- Cars Grid & Cards ----------------- */
+.cars-section{max-width:1200px;margin:10px auto 80px;padding:0 16px}
+.section-title{font-size:22px;font-weight:800;text-align:left;margin:4px 0 12px;color:#102a43}
+.cars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+/* card */
+.car-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 10px 30px rgba(2,6,23,0.06);display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s}
+.car-card:hover{transform:translateY(-6px);box-shadow:0 20px 45px rgba(2,6,23,0.10)}
+
+.car-media{position:relative;width:100%;overflow:hidden;background:#f2f6fb}
+.car-media::after{content:"";display:block;padding-bottom:62%} /* image aspect ratio */
+.car-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+.car-details{padding:14px;display:flex;flex-direction:column;gap:10px}
+.car-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.car-title{font-size:18px;font-weight:800;color:#0b2540}
+.car-price{font-size:18px;color:#e94545;font-weight:900}
+
+.car-info{display:flex;gap:8px;flex-wrap:wrap;color:#475569;font-weight:600;font-size:13px}
+.car-features{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.feature-tag{padding:6px 10px;border-radius:999px;background:#f1f5f9;font-weight:700;color:#102a43;font-size:13px;box-shadow:0 6px 14px rgba(2,6,23,0.03)}
+
+/* badges for cleanliness / standard */
+.badges{display:flex;gap:8px;margin-top:4px}
+.badge{font-size:12px;padding:6px 8px;border-radius:8px;background:#ecf9f3;color:#065f46;font-weight:800;border:1px solid #d1fae5}
+.badge.standard{background:linear-gradient(90deg,#fff7ed,#fff1e6);color:#7a3e00;border:1px solid #ffedd5}
+
+/* action area */
+.action-row{display:flex;gap:10px;margin-top:10px}
+.btn{flex:1;border:0;border-radius:10px;padding:12px;font-weight:800;display:inline-flex;align-items:center;gap:10px;justify-content:center;cursor:pointer}
+.btn i{font-size:16px}
+.btn-whatsapp{background:linear-gradient(90deg,#25D366,#128C7E);color:#fff}
+.btn-call{background:linear-gradient(90deg,#3b82f6,#2563eb);color:#fff}
+.btn-details{background:linear-gradient(90deg,#f59e0b,#e67e22);color:#fff;width:100%;margin-top:10px;padding:12px;border-radius:10px}
+
+/* loading */
+.loading{grid-column:1/-1;text-align:center;padding:36px;color:#64748b;font-weight:700}
+
+/* footer */
+footer{max-width:1200px;margin:40px auto;padding:26px;text-align:center;color:#475569;font-size:14px}
+
+/* responsive */
+@media (max-width:1024px){ .cars-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:640px){
+  :root{--brand-height:108px;--search-height:112px}
+  .brand-inner{padding:10px}
+  .brand-title{font-size:16px}
+  .search-panel{flex-direction:column;align-items:stretch;padding:10px}
+  .search-controls{display:flex;flex-wrap:wrap}
+  .cars-grid{grid-template-columns:1fr;gap:12px}
+  .car-title{font-size:16px}
+  .car-price{font-size:16px}
+  .badge{font-size:11px;padding:6px 8px}
+}
+</style>
+</head>
+<body>
+
+<!-- BRAND HEADER (fixed) -->
+<div class="brand-header" role="banner" aria-label="DrivePune header">
+  <div class="brand-inner">
+    <div class="brand-logo">DP</div>
+    <div class="brand-text">
+      <div class="brand-title">DrivePune</div>
+      <div class="brand-sub">Sanitized • Standard-Checked • Safe Rides — +91 95118 64107</div>
+    </div>
+
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <a href="tel:+919511864107" style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;color:#fff;font-weight:700">Call: +91 95118 64107</a>
+      <a href="https://wa.me/919511864107" target="_blank" style="background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;color:#fff;font-weight:700">WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH PANEL (fixed just below brand) -->
+<div class="search-fixed-wrap" role="search" aria-label="Search cars">
+  <div class="search-panel">
+    <div class="input-group">
+      <span class="icon"><i class="fas fa-search"></i></span>
+      <input id="searchInput" placeholder="Search cars, model or feature (e.g., Swift, Innova, diesel)" />
+    </div>
+
+    <div class="search-controls">
+      <select id="fuelTypeFilter" aria-label="Fuel type">
+        <option value="">Fuel: All</option>
+        <option value="petrol">Petrol</option>
+        <option value="diesel">Diesel</option>
+        <option value="cng">CNG</option>
+        <option value="electric">Electric</option>
+      </select>
+
+      <select id="carTypeFilter" aria-label="Car type">
+        <option value="">Type: All</option>
+        <option value="hatchback">Hatchback</option>
+        <option value="sedan">Sedan</option>
+        <option value="suv">SUV</option>
+        <option value="mpv">MPV</option>
+      </select>
+
+      <button id="searchButton" class="search-btn"><i class="fas fa-search"></i> Search</button>
+    </div>
+  </div>
+</div>
+
+<!-- spacer so content not hidden underneath fixed header+search -->
+<div class="page-spacer" aria-hidden="true"></div>
+
+<!-- HERO (simple banner like 'start vehicle' cleanliness statement) -->
+<div class="hero wrap" role="region" aria-label="DrivePune features">
+  <div>
+    <h1 style="margin:0 0 6px 0">Sanitized Vehicles • Standard Inspection</h1>
+    <p style="margin:0;color:#475569">All cars are cleaned & disinfected before every ride. Standard checks done to ensure safe travel.</p>
+  </div>
+</div>
+
+<!-- CARS GRID -->
+<section class="cars-section">
+  <div class="wrap">
+    <div class="section-title">Available Cars — Clean & Standard</div>
+    <div id="carsContainer" class="cars-grid">
+      <div class="loading">Loading cars…</div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  © <strong>DrivePune</strong> — Sanitized & Standard-Checked Cars • Near Shell Petrol Pump Bhukum, Pune • <a href="tel:+919511864107">+91 95118 64107</a>
+</footer>
+
+<!-- Firebase + App JS (keeps same functionality as earlier) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+/* ----------------- Config ----------------- */
+const WHATSAPP_PHONE = '919511864107';
+const CALL_PHONE = '+919511864107';
+
+/* Firebase config: replace with your own if needed */
+const firebaseConfig = {
+  apiKey: "AIzaSyCqDu2iOLaqZP-pxr4gxuuKuwwhzsd5E4s",
+  authDomain: "car-rental-website-43a4f.firebaseapp.com",
+  projectId: "car-rental-website-43a4f",
+  storageBucket: "car-rental-website-43a4f.firebasestorage.app",
+  messagingSenderId: "850074386251",
+  appId: "1:850074386251:web:dc3e8f3f476a3cfab072ce"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const carsCollection = db.collection('cars');
+
+/* ----------------- DOM refs ----------------- */
+const carsContainer = document.getElementById('carsContainer');
+const searchInput = document.getElementById('searchInput');
+const fuelTypeFilter = document.getElementById('fuelTypeFilter');
+const carTypeFilter = document.getElementById('carTypeFilter');
+const searchButton = document.getElementById('searchButton');
+
+/* ----------------- Helpers ----------------- */
+function escapeForJS(s){ return (''+s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+
+function createCarCard(car){
+  const id = car.id || car._id || Math.random().toString(36).slice(2,9);
+  const name = car.name || 'Unknown';
+  const img = (car.images && car.images[0]) || car.image || 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1200&q=80';
+  const year = car.year || '—';
+  const mileage = car.mileage || '—';
+  const seats = car.seats || '—';
+  const fuel = (car.fuelType || car.fuel || 'N/A');
+  const transmission = car.transmission || car.trans || 'Auto';
+  const rate = car.dailyRate || car.price || 0;
+
+  const el = document.createElement('article');
+  el.className = 'car-card';
+  el.id = 'car-' + id;
+  el.innerHTML = `
+    <div class="car-media"><img loading="lazy" class="car-image" src="${img}" alt="${name}"></div>
+    <div class="car-details">
+      <div class="car-top">
+        <h3 class="car-title">${name}</h3>
+        <div class="car-price">₹${rate}<small>/day</small></div>
+      </div>
+
+      <div class="car-info">
+        <span title="Year"><i class="fas fa-calendar-alt"></i>&nbsp;${year}</span>
+        <span title="Mileage"><i class="fas fa-tachometer-alt"></i>&nbsp;${mileage}</span>
+        <span title="Seats"><i class="fas fa-chair"></i>&nbsp;${seats}</span>
+      </div>
+
+      <div class="badges">
+        <div class="badge">Sanitized</div>
+        <div class="badge standard">Standard</div>
+      </div>
+
+      <div class="car-features">
+        <span class="feature-tag">${fuel}</span>
+        <span class="feature-tag">${transmission}</span>
+        <span class="feature-tag">${seats} Seats</span>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-whatsapp" onclick="contactViaWhatsApp('${escapeForJS(name)}','${escapeForJS(fuel)}','${escapeForJS(transmission)}','${seats}','${rate}')">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </button>
+        <button class="btn btn-call" onclick="callNow('${CALL_PHONE}')">
+          <i class="fas fa-phone"></i> Call
+        </button>
+      </div>
+
+      <a href="details.html?id=${encodeURIComponent(id)}"><button class="btn btn-details"><i class="fas fa-info-circle"></i> View Details</button></a>
+    </div>
+  `;
+  return el;
+}
+
+/* ----------------- Load & Search ----------------- */
+let currentCars = new Map();
+let currentFilters = {};
+
+function loadCars(filters = {}) {
+  carsContainer.innerHTML = '<div class="loading">Loading cars…</div>';
+  let query = carsCollection;
+  if (filters.fuelType) query = query.where('fuelType','==',filters.fuelType);
+  if (filters.carType) query = query.where('type','==',filters.carType);
+  query.limit(120).get().then(snapshot=>{
+    carsContainer.innerHTML = '';
+    currentCars.clear();
+    if (snapshot.empty){ carsContainer.innerHTML = '<div class="loading">No cars found.</div>'; return; }
+    const docs = [];
+    snapshot.forEach(doc=>{ const c=doc.data(); c.id=doc.id; docs.push(c); currentCars.set(c.id,c); });
+    // client-side search term
+    const term = (filters.searchTerm||'').trim().toLowerCase();
+    let results = docs;
+    if (term) results = docs.filter(c => (''+(c.name||'')+' '+(c.model||'')+' '+(c.fuelType||'')).toLowerCase().includes(term));
+    if (results.length===0){ carsContainer.innerHTML = '<div class="loading">No cars match your search.</div>'; return; }
+    results.forEach((car,idx)=>{ const card = createCarCard(car); card.style.animationDelay = (idx*0.05)+'s'; carsContainer.appendChild(card); });
+    currentFilters = filters;
+  }).catch(err => { console.error(err); carsContainer.innerHTML = '<div class="loading">Failed to load cars.</div>'; });
+}
+
+function performSearch(){
+  const filters = { searchTerm: searchInput.value||'', fuelType: fuelTypeFilter.value||'', carType: carTypeFilter.value||'' };
+  loadCars(filters);
+  // scroll to below fixed header/search
+  const offset = document.querySelector('.page-spacer')?.offsetTop || 0;
+  window.scrollTo({top: offset + 8, behavior:'smooth'});
+}
+
+/* ----------------- Contact actions ----------------- */
+function contactViaWhatsApp(carName, fuelType, transmission, seats, rate){
+  const from = document.getElementById('searchInput').value || 'Pune';
+  const message = `Hi DrivePune, I'm interested in *${carName}* (${fuelType}, ${transmission}, ${seats} seats) at ₹${rate}/day. Pickup: ${from}. Please share availability.`;
+  window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`,'_blank');
+}
+function callNow(phone){ window.location.href = 'tel:' + phone; }
+
+/* expose global for inline usage */
+window.contactViaWhatsApp = contactViaWhatsApp;
+window.callNow = callNow;
+window.escapeForJS = escapeForJS;
+
+/* ----------------- Auto refresh (simple) ----------------- */
+function smartRefresh(){
+  if (!currentFilters) return;
+  let q = carsCollection.limit(200);
+  if (currentFilters.fuelType) q = q.where('fuelType','==',currentFilters.fuelType);
+  if (currentFilters.carType) q = q.where('type','==',currentFilters.carType);
+  q.get().then(snapshot=>{
+    const newMap = new Map();
+    snapshot.forEach(doc=>{ const car=doc.data(); car.id=doc.id; newMap.set(car.id,car);
+      if (!currentCars.has(car.id)){ const el = createCarCard(car); carsContainer.prepend(el); }
+      else { const old = currentCars.get(car.id); if (JSON.stringify(old)!==JSON.stringify(car)){ const existing=document.getElementById('car-'+car.id); if (existing){ const newEl=createCarCard(car); existing.parentNode.replaceChild(newEl, existing); } } }
+    });
+    currentCars.forEach((v,k)=>{ if (!newMap.has(k)){ const el=document.getElementById('car-'+k); if (el) el.remove(); } });
+    currentCars = newMap;
+  }).catch(e=>console.error('refresh error', e));
+}
+function setupAutoRefresh(){ setInterval(()=>{ if (currentCars.size>0) smartRefresh(); }, 9000); }
+
+/* ----------------- Events & Init ----------------- */
+searchButton.addEventListener('click', performSearch);
+searchInput.addEventListener('keyup', (e)=>{ if (e.key==='Enter') performSearch(); });
+
+document.addEventListener('DOMContentLoaded', ()=>{ loadCars(); setupAutoRefresh(); });
+</script>
+</body>
+</html>

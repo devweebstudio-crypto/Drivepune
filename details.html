@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>DrivePune — Car Details</title>
+<link rel="icon" href="https://i.ibb.co/LX093jkB/logo.png" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+  /* ---------------- Reset & Base ---------------- */
+  *{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial}
+  html,body{height:100%}
+  body{background:#f6f8fb;color:#102a43;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:12px}
+
+  :root{
+    --brand-height:64px;
+    --search-height:52px;
+    --transition-fast:160ms;
+  }
+
+  /* ---------------- Header (compact, same as main site) ---------------- */
+  .brand-header{
+    position:fixed;top:0;left:0;right:0;z-index:140;
+    background:linear-gradient(90deg,#0b66ff,#06a6ff);
+    color:#fff;padding:8px 0;box-shadow:0 8px 24px rgba(2,6,23,0.12);
+    transition: transform var(--transition-fast) cubic-bezier(.2,.9,.2,1), opacity var(--transition-fast);
+    will-change:transform,opacity;
+  }
+  .brand-header.hidden{ transform: translateY(-120%); opacity:0; pointer-events:none; }
+
+  .brand-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:6px 14px}
+  .brand-logo{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex:0 0 44px}
+  .brand-body{display:flex;flex-direction:column;gap:2px}
+  .brand-title{font-weight:800;font-size:16px;line-height:1}
+  .brand-slogan{font-size:12px;opacity:.95}
+  .brand-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .brand-actions a{font-weight:700;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.10);color:#fff;font-size:13px}
+
+  .vehicle-icon{ width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:8px;margin-right:6px; }
+
+  /* ---------------- Compact search row ---------------- */
+  .search-row-wrap{
+    position:fixed; left:0; right:0; top:var(--brand-height); z-index:135;
+    display:flex;justify-content:center;padding:6px 10px; background:rgba(255,255,255,0.98);
+    border-bottom:1px solid #eef4ff; box-shadow:0 8px 22px rgba(2,6,23,0.04);
+    transition: top var(--transition-fast) cubic-bezier(.2,.9,.2,1), transform var(--transition-fast);
+    will-change:top,transform;
+  }
+  .search-row-wrap.hidden{ transform:translateY(-120%); pointer-events:none; opacity:0; }
+  .search-row{ width:100%; max-width:1100px; display:flex; gap:8px; align-items:center; padding:6px; border-radius:10px; }
+  .vehicle-name{ flex:1; min-width:120px; }
+  .vehicle-name input{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e6eef8; font-size:15px; }
+  .fuel-select{ width:130px; min-width:110px; }
+  .fuel-select select{ width:100%; padding:10px; border-radius:10px; border:1px solid #e6eef8; background:white; font-size:14px; }
+  .search-btn{ width:48px; height:48px; border-radius:12px; display:inline-flex; align-items:center; justify-content:center; background:linear-gradient(90deg,#0b66ff,#06a6ff); color:white; border:0; cursor:pointer; font-size:18px; box-shadow:0 8px 18px rgba(11,38,90,0.12); }
+
+  .page-spacer{ height: calc(var(--brand-height) + var(--search-height) + 12px); transition: height var(--transition-fast); }
+
+  /* ---------------- Content (details card) ---------------- */
+  .container{ max-width:1180px; margin:0 auto; padding:0 12px; }
+  .breadcrumb{ padding:10px 0; color:#475569; font-size:14px; margin-top:6px; }
+  .breadcrumb a{ color:#0b66ff; }
+
+  .car-details-section{ padding:8px 0 40px; }
+  .car-details-container{ display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; margin-top:8px; }
+
+  .car-images{ flex:1; min-width:300px; }
+  .main-image{ width:100%; height:420px; object-fit:cover; border-radius:10px; box-shadow:0 8px 22px rgba(2,6,23,0.04); }
+  .thumbnail-container{ display:flex; gap:10px; overflow-x:auto; margin-top:10px; }
+  .thumbnail{ width:110px; height:70px; object-fit:cover; border-radius:6px; cursor:pointer; opacity:0.75; transition:opacity .18s, transform .18s; }
+  .thumbnail.active, .thumbnail:hover{ opacity:1; transform:translateY(-4px); }
+
+  .car-info{ flex:1; min-width:300px; background:#fff; padding:18px; border-radius:10px; box-shadow:0 8px 22px rgba(2,6,23,0.04); }
+  .car-title{ font-size:20px; font-weight:800; color:#0b2540; margin-bottom:6px; }
+  .car-price{ font-size:18px; color:#e94545; font-weight:900; margin-bottom:12px; }
+
+  .car-specs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; margin-bottom:14px; }
+  .spec-item{ display:flex; align-items:center; gap:10px; background:#fbfdff; padding:10px; border-radius:8px; }
+  .spec-icon{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#eef7ff; color:#0b66ff; font-size:16px; }
+  .spec-label{ font-size:13px; color:#7f8c8d; }
+  .spec-value{ font-size:15px; color:#0b2540; font-weight:700; }
+
+  .features-list{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+  .feature-tag{ background:#eef6ff; padding:8px 12px; border-radius:999px; font-weight:700; color:#0b2540; font-size:13px; }
+
+  .action-buttons{ display:flex; gap:12px; margin-top:14px; }
+  .btn{ padding:12px 16px; border-radius:10px; border:0; cursor:pointer; font-weight:800; display:inline-flex; align-items:center; gap:8px; justify-content:center; }
+  .btn-whatsapp{ background:linear-gradient(90deg,#25D366,#128C7E); color:#fff; }
+  .btn-call{ background:linear-gradient(90deg,#3b82f6,#2563eb); color:#fff; }
+  .btn-book{ background:linear-gradient(90deg,#f59e0b,#e67e22); color:#fff; flex:1; }
+
+  .rental-terms{ margin-top:18px; background:#fff; padding:16px; border-radius:10px; box-shadow:0 8px 22px rgba(2,6,23,0.04); }
+
+  /* footer */
+  footer{ margin-top:24px; padding:18px 12px; text-align:center; color:#64748b; font-size:13px; }
+
+  /* responsive */
+  @media (max-width:1024px){ .car-details-container{ gap:16px } }
+  @media (max-width:720px){
+    :root{ --brand-height:60px; --search-height:56px;}
+    .brand-title{ font-size:15px }
+    .brand-slogan{ font-size:11px }
+    .main-image{ height:320px }
+    .thumbnail{ width:88px; height:56px }
+    .car-info{ padding:14px }
+    .search-row{ gap:6px }
+    .vehicle-name input{ font-size:15px }
+  }
+</style>
+</head>
+<body>
+
+  <!-- BRAND HEADER -->
+  <div class="brand-header" id="brandHeader" role="banner">
+    <div class="brand-inner wrap">
+      <div class="brand-logo" aria-hidden="true">DP</div>
+
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="vehicle-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 13l1.5-4.5A2 2 0 0 1 6.4 7h11.2a2 2 0 0 1 1.9 1.5L21 13" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="3" y="13" width="18" height="6" rx="1" stroke="white" stroke-width="1.2"/>
+            <circle cx="7.5" cy="19" r="1.2" fill="white"/>
+            <circle cx="16.5" cy="19" r="1.2" fill="white"/>
+          </svg>
+        </div>
+
+        <div class="brand-body">
+          <div class="brand-title">DrivePune</div>
+          <div class="brand-slogan">Pune's best self-drive / rental car</div>
+        </div>
+      </div>
+
+      <div class="brand-actions" aria-hidden="true">
+        <a href="tel:+919511864107">Call</a>
+        <a href="https://wa.me/919511864107" target="_blank">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPACT SEARCH ROW -->
+  <div class="search-row-wrap" id="searchRowWrap" role="search">
+    <div class="search-row wrap">
+      <div class="vehicle-name">
+        <input id="searchInput" type="text" placeholder="Vehicle name (e.g., City, Innova)" aria-label="Vehicle name">
+      </div>
+
+      <div class="fuel-select">
+        <select id="fuelTypeFilter" aria-label="Fuel type">
+          <option value="">Fuel: All</option>
+          <option value="petrol">Petrol</option>
+          <option value="diesel">Diesel</option>
+          <option value="cng">CNG</option>
+          <option value="electric">Electric</option>
+        </select>
+      </div>
+
+      <button id="searchButton" class="search-btn" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <!-- spacer prevents overlap under fixed header+search -->
+  <div id="pageSpacer" class="page-spacer" aria-hidden="true"></div>
+
+  <!-- Breadcrumb -->
+  <div class="container breadcrumb">
+    <a href="index.html">Home</a> &nbsp;›&nbsp; <a href="index.html#cars">Available Cars</a> &nbsp;›&nbsp; <span id="breadcrumbCarName">Car Details</span>
+  </div>
+
+  <!-- Car Details Section -->
+  <section class="car-details-section">
+    <div class="container" id="carDetailsContainer">
+      <div class="loading">Loading car details...</div>
+    </div>
+  </section>
+
+  <footer>© DrivePune — Pune • +91 95118 64107</footer>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // ---------------- Firebase config (same as site) ----------------
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqDu2iOLaqZP-pxr4gxuuKuwwhzsd5E4s",
+      authDomain: "car-rental-website-43a4f.firebaseapp.com",
+      projectId: "car-rental-website-43a4f",
+      storageBucket: "car-rental-website-43a4f.firebasestorage.app",
+      messagingSenderId: "850074386251",
+      appId: "1:850074386251:web:dc3e8f3f476a3cfab072ce"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const carsCollection = db.collection('cars');
+
+    // ---------------- DOM refs ----------------
+    const brandHeader = document.getElementById('brandHeader');
+    const searchRowWrap = document.getElementById('searchRowWrap');
+    const pageSpacer = document.getElementById('pageSpacer');
+    const carDetailsContainer = document.getElementById('carDetailsContainer');
+    const breadcrumbCarName = document.getElementById('breadcrumbCarName');
+    const searchInput = document.getElementById('searchInput');
+    const fuelTypeFilter = document.getElementById('fuelTypeFilter');
+    const searchButton = document.getElementById('searchButton');
+
+    const WHATSAPP_PHONE = '919511864107';
+    const CALL_PHONE = '+919511864107';
+
+    // ---------------- Utility ----------------
+    function escapeForJS(s){ return (''+s).replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+
+    // ---------------- Get car id from URL ----------------
+    function getCarIdFromURL(){
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('id');
+    }
+
+    // ---------------- Render helpers ----------------
+    function changeImage(thumbnail){
+      document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+      thumbnail.classList.add('active');
+      document.getElementById('mainImage').src = thumbnail.src;
+    }
+
+    function createCarDetailsHTML(car){
+      breadcrumbCarName.textContent = car.name || 'Car Details';
+
+      // thumbnails
+      let thumbnailsHTML = '';
+      if (car.images && car.images.length){
+        car.images.forEach((imgUrl, idx) => {
+          const active = idx === 0 ? 'active' : '';
+          thumbnailsHTML += `<img src="${imgUrl}" class="thumbnail ${active}" alt="${car.name}" onclick="changeImage(this)">`;
+        });
+      } else {
+        thumbnailsHTML = '<p>No images available</p>';
+      }
+
+      // features - keep same static list but you can replace if `car.features` exists
+      const featuresList = (car.features && car.features.length) ? car.features : ['Air Conditioning','Bluetooth','GPS Navigation','Backup Camera','Power Windows','ABS','Airbags'];
+      const featuresHTML = featuresList.map(f => `<span class="feature-tag">${f}</span>`).join('');
+
+      // build details html
+      return `
+        <div class="car-details-container">
+          <div class="car-images">
+            <img id="mainImage" src="${(car.images && car.images[0]) || 'https://via.placeholder.com/800x600?text=No+Image'}" alt="${car.name}" class="main-image">
+            <div class="thumbnail-container">${thumbnailsHTML}</div>
+          </div>
+
+          <div class="car-info">
+            <h1 class="car-title">${car.name || 'Unknown'} ${car.year ? car.year : ''}</h1>
+            <div class="car-price">₹${car.dailyRate || '0'} / day</div>
+
+            <div class="car-specs">
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-gas-pump"></i></div><div><div class="spec-label">Fuel</div><div class="spec-value">${car.fuelType || 'N/A'}</div></div></div>
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-cogs"></i></div><div><div class="spec-label">Transmission</div><div class="spec-value">${car.transmission || 'N/A'}</div></div></div>
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-user-friends"></i></div><div><div class="spec-label">Seats</div><div class="spec-value">${car.seats || 'N/A'}</div></div></div>
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-tachometer-alt"></i></div><div><div class="spec-label">Mileage</div><div class="spec-value">${car.mileage ? car.mileage + ' km' : 'N/A'}</div></div></div>
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-calendar-alt"></i></div><div><div class="spec-label">Year</div><div class="spec-value">${car.year || 'N/A'}</div></div></div>
+              <div class="spec-item"><div class="spec-icon"><i class="fas fa-money-bill-wave"></i></div><div><div class="spec-label">Deposit</div><div class="spec-value">₹${car.deposit || '0'}</div></div></div>
+            </div>
+
+            <div class="car-features">
+              <h3 class="features-title">Car Features</h3>
+              <div class="features-list">${featuresHTML}</div>
+            </div>
+
+            <div class="action-buttons">
+              <button class="btn btn-whatsapp" onclick="contactViaWhatsApp('${escapeForJS(car.name || '')}')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+              <button class="btn btn-call" onclick="callNow()"><i class="fas fa-phone"></i> Call Now</button>
+              <button class="btn btn-book" onclick="bookCar('${escapeForJS(car.name || '')}')"><i class="fas fa-calendar-check"></i> Book Now</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="rental-terms">
+          <h2 class="terms-title">Rental Terms & Conditions</h2>
+          <ul class="terms-list">
+            <li><span>Security Deposit</span><span>₹${car.deposit || '200'} (refundable)</span></li>
+            <li><span>Minimum Rental Period</span><span>1 day</span></li>
+            <li><span>Maximum Rental Period</span><span>30 days</span></li>
+            <li><span>Free Mileage</span><span>100 km/day</span></li>
+            <li><span>Additional Mileage Charge</span><span>₹0.25/km</span></li>
+            <li><span>Fuel Policy</span><span>Same as received</span></li>
+            <li><span>Insurance</span><span>Comprehensive coverage included</span></li>
+            <li><span>Driver Age</span><span>21 years minimum</span></li>
+          </ul>
+        </div>
+      `;
+    }
+
+    // ---------------- Contact handlers ----------------
+    function contactViaWhatsApp(carName){
+      const message = `Hi, I'm interested in renting the ${carName}. Please share availability.`;
+      window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+    function callNow(){ window.location.href = 'tel:' + CALL_PHONE; }
+    function bookCar(carName){
+      alert(`Booking form placeholder for ${carName}. In production you would open a booking modal or page.`);
+    }
+
+    // ---------------- Realtime listener for this car doc ----------------
+    let docUnsubscribe = null;
+    function watchCarDocRealtime(carId){
+      if (!carId) return;
+      // detach previous
+      if (docUnsubscribe) docUnsubscribe();
+
+      const ref = carsCollection.doc(carId);
+      docUnsubscribe = ref.onSnapshot(doc => {
+        if (!doc.exists){
+          carDetailsContainer.innerHTML = '<div class="loading">Car not found. <a href="index.html">Return to home</a></div>';
+          return;
+        }
+        const car = doc.data();
+        carDetailsContainer.innerHTML = createCarDetailsHTML(car);
+        // re-run recalc heights (images may change layout)
+        setTimeout(recalcHeights, 60);
+      }, err => {
+        console.error('car doc snapshot error', err);
+        // fallback to one-time get
+        ref.get().then(d => {
+          if (!d.exists) carDetailsContainer.innerHTML = '<div class="loading">Car not found. <a href="index.html">Return to home</a></div>';
+          else { carDetailsContainer.innerHTML = createCarDetailsHTML(d.data()); setTimeout(recalcHeights, 60); }
+        }).catch(e => { carDetailsContainer.innerHTML = '<div class="loading">Error loading car. Try again later.</div>'; });
+      });
+    }
+
+    // ---------------- Search behavior: redirect to index with params ----------------
+    function applySearchRedirect(){
+      const q = (searchInput.value || '').trim();
+      const fuel = fuelTypeFilter.value || '';
+      // simple redirect to index with query params so the index can pick it up
+      const url = new URL(window.location.origin + '/index.html');
+      if (q) url.searchParams.set('q', q);
+      if (fuel) url.searchParams.set('fuel', fuel);
+      window.location.href = url.toString();
+    }
+
+    searchButton.addEventListener('click', applySearchRedirect);
+    searchInput.addEventListener('keyup', (e)=>{ if (e.key === 'Enter') applySearchRedirect(); });
+
+    // ---------------- Dynamic spacer & header hide/show (matching main site) ----------------
+    function recalcHeights(){
+      const brandRect = brandHeader.getBoundingClientRect();
+      const searchRect = searchRowWrap.getBoundingClientRect();
+      const brandH = Math.ceil(brandRect.height);
+      const searchH = Math.ceil(searchRect.height);
+      const total = brandH + searchH + 12;
+      document.documentElement.style.setProperty('--brand-height', brandH + 'px');
+      document.documentElement.style.setProperty('--search-height', searchH + 'px');
+      pageSpacer.style.height = total + 'px';
+
+      // position search row under header if header visible
+      if (!brandHeader.classList.contains('hidden')) searchRowWrap.style.top = brandH + 'px';
+      else searchRowWrap.style.top = '0px';
+    }
+
+    // Scroll behaviour: show header+search when scrolling down; hide both when scrolling up
+    (function headerScrollBehavior(){
+      let lastY = window.scrollY || 0;
+      let ticking = false;
+      const SHOW_THRESHOLD = 6;
+      const HIDE_THRESHOLD = -2;
+
+      window.addEventListener('scroll', () => {
+        const y = window.scrollY || 0;
+        const delta = y - lastY;
+
+        if (!ticking){
+          window.requestAnimationFrame(()=>{
+            if (delta > SHOW_THRESHOLD){
+              if (brandHeader.classList.contains('hidden')){
+                brandHeader.classList.remove('hidden');
+                searchRowWrap.classList.remove('hidden');
+                recalcHeights();
+              }
+            } else if (delta < HIDE_THRESHOLD){
+              if (!brandHeader.classList.contains('hidden')){
+                brandHeader.classList.add('hidden');
+                searchRowWrap.classList.add('hidden');
+                recalcHeights();
+              }
+            }
+            if (y <= 12 && brandHeader.classList.contains('hidden')){
+              brandHeader.classList.remove('hidden');
+              searchRowWrap.classList.remove('hidden');
+              recalcHeights();
+            }
+
+            lastY = y;
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      window.addEventListener('resize', ()=>{
+        setTimeout(recalcHeights, 80);
+        if (window.innerWidth > 1200){
+          brandHeader.classList.remove('hidden');
+          searchRowWrap.classList.remove('hidden');
+        }
+      });
+    })();
+
+    // ---------------- Init ----------------
+    document.addEventListener('DOMContentLoaded', () => {
+      const carId = getCarIdFromURL();
+      if (!carId){
+        carDetailsContainer.innerHTML = '<div class="loading">Car not found. <a href="index.html">Return to homepage</a></div>';
+        return;
+      }
+      watchCarDocRealtime(carId);
+      // small delays to handle fonts/images loading and to set spacer correctly
+      setTimeout(recalcHeights, 40);
+      setTimeout(recalcHeights, 350);
+      setTimeout(recalcHeights, 900);
+    });
+
+    // Expose changeImage globally so thumbnail onclick works
+    window.changeImage = changeImage;
+  </script>
+</body>
+</html>
